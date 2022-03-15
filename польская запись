@@ -1,0 +1,90 @@
+#include <stdio.h>//реализовано рекурсивным способом
+using namespace std;
+
+float schitaem()
+{
+
+
+int res = 0;
+for (;;)
+{
+    char reading= getchar();
+    if (reading>= '0' && reading<= '9')
+        res = res * 10 + reading- '0';
+    else
+    {
+        ungetc(reading, stdin);
+        return res;
+    }
+}
+
+
+
+}
+
+float plusminus();
+float ischemscbky()
+            {
+            char reading= getchar();
+            if (reading== '(')
+                        {
+                        float x = plusminus();
+                        getchar();
+                        return x;
+                        }
+                        else
+            {
+                        ungetc(reading, stdin);
+                        return schitaem();
+            }
+}
+
+float ymnozhdel()
+{
+     float x = ischemscbky();
+      for (;;)
+     {
+
+        char reading= getchar();
+        switch (reading)
+         {
+           case '*':
+             x *= ischemscbky();
+            break;
+            case '/':
+            x /= ischemscbky();
+            break;
+            default:
+            ungetc(reading, stdin);
+            return x;
+            }
+        }
+}
+
+float plusminus()
+{
+
+    float x = ymnozhdel();
+     for (;;)
+    {
+     char reading= getchar();
+      switch (reading)
+           {
+     case '+':
+      x += ymnozhdel();
+      break;
+      case '-':
+       x -= ymnozhdel();
+      break;
+        default:
+       ungetc(reading, stdin);
+       return x;
+             }
+        }
+}
+
+int main()
+{
+float res = plusminus();
+printf("%f", res);
+}
