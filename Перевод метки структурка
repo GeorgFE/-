@@ -1,0 +1,128 @@
+#include <iostream>
+#include <locale.h>
+#include <string>
+#include <fstream>
+#define cout fout
+using namespace std;
+
+void print(int count, string* AS, ofstream& fout) {
+    cout << "\nВаша программа выглядит так:\n";
+    if (count > 0)
+        for (int i = 0; i < count; i++)
+            cout << AS[i] << endl;
+    else
+        cout << "Программа не верна, попробуйте заново.";
+
+
+}
+void print_mark(ofstream& fout, string vir) {
+    string copyt;
+    copyt = vir;
+    int posi = vir.find('.');
+    vir.erase(posi);
+    cout << "\tif w then\n" << "\t if z == " << vir << " then" << endl;
+    vir = copyt;
+    vir.erase(0, posi + 1);
+
+}
+void voda(ofstream& fout) {
+    cout << "\nПеревод программы с метками в структурированную:\n";
+    cout << "z=1;\n";
+    cout << "while z do \n";
+    cout << "\t w = 1 ;\n";
+
+}
+void rewrite_prisvaivanie(ofstream& fout, string vir) {
+    string cop = vir;
+    int pos = vir.find(';');
+    vir.erase(pos);
+    cout << "            " << vir << endl;
+    vir = cop;
+    pos = vir.find(';');
+    vir.erase(0, pos + 1);
+    cout << "\tz = " << vir << ";" << "\n \t w = 0;" << endl;
+    vir = "";
+    pos;
+
+}
+void rewrite_condition(ofstream& fout, string vir, int pos1, string s1, string s3) {
+    string copy = vir;
+    int pos3;
+    vir.erase(pos1 + 4, vir.size());
+    cout << "            " << vir << endl;
+    vir = copy;
+    pos1 = vir.find(s1);
+    vir.erase(0, pos1 + 5);
+    pos3 = vir.find(s3);
+    vir.erase(pos3);
+    cout << "                z = " << vir << ";" << endl;
+    cout << "           " << "else" << endl;
+    vir = copy;
+    pos3 = vir.find(s3);
+    vir.erase(0, pos3 + 5);
+    cout << "                z = " << vir << ";" << "\n            w = 0;" << "\n        end;" << endl;
+
+}
+
+
+int main()
+{
+    setlocale(LC_ALL, "Russian");
+    string* AS;
+    string* AS2;
+    int count;
+    string s;
+    ifstream file("filezh.txt");
+    ofstream fout("filezh.txt");
+
+    count = 0;
+    AS = nullptr;
+
+    while (!file.eof())
+    {
+        getline(file, s);
+
+
+        count++;
+        AS2 = new string[count];
+        for (int i = 0; i < count - 1; i++)
+            AS2[i] = AS[i];
+        AS2[count - 1] = s;
+        if (AS != nullptr)
+            delete[] AS;
+        AS = AS2;
+
+    }
+
+    print(count, AS, fout);
+
+    string vir;
+    voda(fout);
+
+    for (int i = 0; i < count; i++)
+    {
+        vir = AS[i];
+        int posi = vir.find('.');
+        vir.erase(posi);
+        cout << "    if w then\n" << "        if z == " << vir << " then" << endl;
+        vir = AS[i];
+        vir.erase(0, posi + 1);
+        string s = "if";
+        string s1 = "then";
+        string s3 = "else";
+        int pos2, pos1, pos3;
+        pos2 = vir.find(s);
+        pos1 = vir.find(s1);
+        if (pos2 == -1) {
+            rewrite_prisvaivanie(fout, vir);
+        }
+        else
+        {
+            rewrite_condition(fout, vir, pos1, s1, s3);
+        }
+    }
+    cout << "    end;\n";
+    cout << "end;\n";
+    fout.close();
+}
+
